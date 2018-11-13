@@ -36,6 +36,6 @@ def crawler():
 	for link in soup.find_all('a'):
 		t = link.get("href")
 		if t != None and re.search(r'threadid=\d+$', t) != None:
-			links.append(t)
+			links.append(url + t)
 
-	return titles, authors, boards, links
+	return titles, boards, authors, links
