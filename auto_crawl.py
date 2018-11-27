@@ -2,8 +2,8 @@
 import crawler.canteen_crawler as canteen_crawler
 import crawler.lecture_crawler as lecture_crawler
 import crawler.ticket_crawler as ticket_crawler
-#import crawler.hole_crawler as hole_crawler
-#import crawler.hole_reply_crawler as hole_reply_crawler
+import crawler.hole_crawler as hole_crawler
+import crawler.hole_reply_crawler as hole_reply_crawler
 import json
 import time
 import threading
@@ -65,12 +65,29 @@ def create_tables():
 		status = CharField(max_length=256)
 		class Meta:
 			database = db
+			
+	class hole(Model):
+		pid = IntegerField()
+		text = CharField(max_length=256)
+		reply = IntegerField()
+		likenum = IntegerField()
+		class Meta:
+			database = db
 
-	bbs.create_table()
-	bbs_history.create_table()
-	canteen.create_table()
-	lecture.create_table()
-	ticket.create_table()
+	class hole_reply(Model):
+		pid = IntegerField()
+		text = CharField(max_length=256)
+		name = CharField(max_length=256)
+		class Meta:
+			database = db
+
+	#bbs.create_table()
+	#bbs_history.create_table()
+	#canteen.create_table()
+	#lecture.create_table()
+	#ticket.create_table()
+	hole.create_table()
+	hole_reply.create_table()
 
 def bbs():
 	class bbs(Model):
@@ -293,13 +310,20 @@ def ticket_func():
 	global ticket_timer
 	ticket_timer = threading.Timer(ticket_time, ticket_func)
 	ticket_timer.start()
+	
+def hole_func():
+	print("hole")
+	hole()
+	global hole_timer
+	hole_timer = threading.Timer(hole_time, hole_func)
+	hole_timer.start()
 
 create_tables()
 bbs_func()
 canteen_func()
 lecture_func()
 ticket_func()
-#hole()
+hole_func()
 
 '''bbs_query()
 bbs_history_query()
