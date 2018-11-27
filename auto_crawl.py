@@ -293,13 +293,20 @@ def ticket_func():
 	global ticket_timer
 	ticket_timer = threading.Timer(ticket_time, ticket_func)
 	ticket_timer.start()
+	
+def hole_func():
+	print("hole")
+	hole()
+	global hole_timer
+	hole_timer = threading.Timer(hole_time, hole_func)
+	hole_timer.start()
 
 create_tables()
 bbs_func()
 canteen_func()
 lecture_func()
 ticket_func()
-#hole()
+#hole_func()
 
 '''bbs_query()
 bbs_history_query()

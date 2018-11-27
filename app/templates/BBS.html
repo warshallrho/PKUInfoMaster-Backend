@@ -1,0 +1,16 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }}</title>
+      {% else %}
+      <title>Default Title</title>
+      {% endif %}
+    </head>
+    <body>
+        <h1>BBS</h1>
+        <hr>
+        {% for post in posts %}
+        <div><p><b>{{ post.id }}</b>  <b>{{ post.author }}</b> says: <a href="<%=id%>"><b>{{ post.title }}</b></a></p></div>
+        {% endfor %}
+    </body>
+</html>
