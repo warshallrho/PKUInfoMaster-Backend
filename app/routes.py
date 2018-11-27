@@ -43,8 +43,8 @@ def bbs_query():
 def BBS():
 	bbs_array = bbs_query()
 	bbs_array_json = json.dumps(bbs_array, ensure_ascii=False)
-	with open("bbs_record.json","w", encoding="utf8") as f:
-		f.write(bbs_array_json)
+#	with open("bbs_record.json","w", encoding="utf8") as f:
+#		f.write(bbs_array_json)
 	#return render_template('BBS.html', posts=bbs_array, title='PKUInfoMaster')
 	return bbs_array_json
 
@@ -82,8 +82,8 @@ def BBSYMD(YY, MM, DD):
 	#print(YY, MM, DD)
 	bbsYMD_array = bbs_date_query(YY, MM, DD)
 	bbs_history_array_json = json.dumps(bbsYMD_array, ensure_ascii=False)
-	with open("bbs_history_record.json","w", encoding="utf8") as f:
-		f.write(bbs_history_array_json)
+#	with open("bbs_history_record.json","w", encoding="utf8") as f:
+#		f.write(bbs_history_array_json)
 	return bbs_history_array_json
 
 
@@ -117,8 +117,8 @@ def ticket_query():
 def TICKET():
 	ticket_array = ticket_query()
 	ticket_array_json = json.dumps(ticket_array, ensure_ascii=False)
-	with open("ticket_record.json","w", encoding="utf8") as f:
-		f.write(ticket_array_json)
+#	with open("ticket_record.json","w", encoding="utf8") as f:
+#		f.write(ticket_array_json)
 	return ticket_array_json
 
 
@@ -142,15 +142,15 @@ def canteen_query():
 		canteen_array.append(dic)
 	return canteen_array
 	canteen_array = json.dumps(canteen_array, ensure_ascii=False)
-	with open("canteen_record.json","w", encoding="utf8") as f:
-		f.write(canteen_array)
+#	with open("canteen_record.json","w", encoding="utf8") as f:
+#		f.write(canteen_array)
 
 @app.route('/CANTEEN')
 def CANTEEN():
 	canteen_array = canteen_query()
 	canteen_array_json = json.dumps(canteen_array, ensure_ascii=False)
-	with open("canteen_record.json","w", encoding="utf8") as f:
-		f.write(canteen_array_json)
+#	with open("canteen_record.json","w", encoding="utf8") as f:
+#		f.write(canteen_array_json)
 	return canteen_array_json
 
 
@@ -180,7 +180,61 @@ def lecture_query():
 def LECTURE():
 	lecture_array = lecture_query()
 	lecture_array_json = json.dumps(lecture_array, ensure_ascii=False)
-	with open("lecture_record.json","w", encoding="utf8") as f:
-		f.write(lecture_array_json)
+#	with open("lecture_record.json","w", encoding="utf8") as f:
+#		f.write(lecture_array_json)
 	return lecture_array_json
 
+
+def hole_query():
+	class hole(Model):
+		id = IntegerField()
+		pid = IntegerField()
+		text = CharField()
+		reply = IntegerField()
+		likenum = IntegerField()
+		class Meta:
+			database = db
+
+	hole_array = []
+	results = hole.select()
+	for array in results:
+		pid, text, reply, likenum = array.pid, array.text, array.reply, array.likenum
+		dic = {}
+		dic["pid"] = pid
+		dic["text"] = text
+		dic["reply"] = reply
+		dic["likenum"] = likenum
+		hole_array.append(dic)
+	return hole_array
+
+@app.route('/HOLE')
+def HOLE():
+	hole_array = hole_query()
+	hole_array_json = json.dumps(hole_array, ensure_ascii=False)
+#	hole_array_json = json.dumps(hole_array, ensure_ascii=False)
+#	with open("hole_record.json","w", encoding="utf8") as f:
+#		f.write(hole_array_json)
+	return hole_array_json
+
+
+def hole_reply_query():
+	class hole_reply(Model):
+		id = IntegerField()
+		pid = IntegerField()
+		text = CharField()
+		name = CharField()
+		class Meta:
+			database = db
+
+	hole_reply_array = []
+	results = hole_reply.select()
+	for array in results:
+		pid, text, name = array.pid, array.text, array.name
+		dic = {}
+		dic["pid"] = pid
+		dic["text"] = text
+		dic["name"] = name
+		hole_reply_array.append(dic)
+	hole_reply_array = json.dumps(hole_reply_array, ensure_ascii=False)
+	with open("hole_reply_record.json","w", encoding="utf8") as f:
+		f.write(hole_reply_array)
