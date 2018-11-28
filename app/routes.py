@@ -65,9 +65,11 @@ def bbs_date_query(year=2018, month=11, day=0):
 	date = time.strftime('%Y-%m-%d', time_day)
 
 	results = bbs_history.select().where(bbs_history.date == date).order_by(bbs_history.count.desc()).limit(10)
+	#print(results)
 
 	bbs_history_array = []
 	for array in results:
+		print(array)
 		title, board, author, link = array.title, array.board, array.author, array.link
 		dic = {}
 		dic["title"] = title
@@ -75,6 +77,7 @@ def bbs_date_query(year=2018, month=11, day=0):
 		dic["author"] = author
 		dic["link"] = link
 		bbs_history_array.append(dic)
+	print(bbs_history_array)
 	return bbs_history_array
 
 @app.route('/BBS/<int:YY>/<int:MM>/<int:DD>')
@@ -140,39 +143,56 @@ def canteen_query():
 		dic["total"] = total
 		dic["now"] = now
 		canteen_array.append(dic)
+	lth = len(canteen_array)
+	for i in range(lth - 1):
+		for j in range(i + 1, lth):
+			ci = canteen_array[i]
+			cj = canteen_array[j]
+			if (float(ci["now"]) / float(ci["total"]) < float(cj["now"]) / float(cj["total"])):
+				#print(ci["name"])
+				#print(cj["name"])
+				#print()
+				ck = ci.copy()
+				canteen_array[i] = cj.copy()
+				canteen_array[j] = ck
 	return canteen_array
-	canteen_array = json.dumps(canteen_array, ensure_ascii=False)
-#	with open("canteen_record.json","w", encoding="utf8") as f:
-#		f.write(canteen_array)
 
 @app.route('/CANTEEN')
 def CANTEEN():
 	canteen_array = canteen_query()
 	canteen_array_json = json.dumps(canteen_array, ensure_ascii=False)
-#	with open("canteen_record.json","w", encoding="utf8") as f:
-#		f.write(canteen_array_json)
+	with open("canteen_record.json","w", encoding="utf8") as f:
+		f.write(canteen_array_json)
 	return canteen_array_json
 
 
 def lecture_query():
 	class lecture(Model):
-		id  = IntegerField()
+		id = IntegerField()
 		title = CharField()
 		speaker = CharField()
-		time = CharField()
 		place = CharField()
+		date = DateField()
+		time = TimeField()
+		faculty = CharField()
+		school = CharField()
+		label = CharField()
 		class Meta:
 			database = db
 
 	lecture_array = []
 	results = lecture.select()
 	for array in results:
-		title, speaker, time, place = array.title, array.speaker, array.time, array.place
+		title, speaker, place, date, time, faculty, school, label = array.title, array.speaker, array.place, array.date, array.time, array.faculty, array.school, array.label
 		dic = {}
 		dic["title"] = title
 		dic["speaker"] = speaker
-		dic["time"] = time
 		dic["place"] = place
+		dic["date"] = str(date)
+		dic["time"] = str(time)
+		dic["faculty"] = faculty
+		dic["school"] = school
+		dic["label"] = label
 		lecture_array.append(dic)
 	return lecture_array
 
@@ -180,8 +200,8 @@ def lecture_query():
 def LECTURE():
 	lecture_array = lecture_query()
 	lecture_array_json = json.dumps(lecture_array, ensure_ascii=False)
-#	with open("lecture_record.json","w", encoding="utf8") as f:
-#		f.write(lecture_array_json)
+	with open("lecture_record.json","w", encoding="utf8") as f:
+		f.write(lecture_array_json)
 	return lecture_array_json
 
 
@@ -217,7 +237,7 @@ def HOLE():
 	return hole_array_json
 
 
-def hole_reply_query():
+def hole_reply_query(pid):
 	class hole_reply(Model):
 		id = IntegerField()
 		pid = IntegerField()
@@ -227,14 +247,28 @@ def hole_reply_query():
 			database = db
 
 	hole_reply_array = []
-	results = hole_reply.select()
+	results = hole_reply.select().where(hole_reply.pid == pid).limit(10)#.order_by(hole_reply.id.asc())
+
 	for array in results:
+		#print(array)
 		pid, text, name = array.pid, array.text, array.name
 		dic = {}
 		dic["pid"] = pid
 		dic["text"] = text
 		dic["name"] = name
+		#print(dic)
 		hole_reply_array.append(dic)
-	hole_reply_array = json.dumps(hole_reply_array, ensure_ascii=False)
+	return hole_reply_array
+	#hole_reply_array = json.dumps(hole_reply_array, ensure_ascii=False)
+	#with open("hole_reply_record.json","w", encoding="utf8") as f:
+	#	f.write(hole_reply_array)
+	
+
+@app.route('/HOLE/<int:PID>')
+def HOLE_REPLY(PID):
+	hole_reply_array = hole_reply_query(PID)
+	hole_reply_array_json = json.dumps(hole_reply_array, ensure_ascii=False)
 	with open("hole_reply_record.json","w", encoding="utf8") as f:
-		f.write(hole_reply_array)
+		f.write(hole_reply_array_json)
+	return hole_reply_array_json
+

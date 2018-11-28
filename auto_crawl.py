@@ -16,11 +16,13 @@ bbs_time = 1800
 canteen_time = 1800
 lecture_time = 1800
 ticket_time = 1800
+hole_time = 1800
 
 bbs_timer = None
 canteen_timer = None
 lecture_timer = None
 ticket_timer = None
+hole_timer = None
 
 def create_tables():
 	class bbs(Model):
@@ -51,8 +53,12 @@ def create_tables():
 	class lecture(Model):
 		title = CharField(max_length=256)
 		speaker = CharField(max_length=256)
-		time = CharField(max_length=256)
 		place = CharField(max_length=256)
+		date = DateField()
+		time = TimeField()
+		faculty = CharField(max_length=256)
+		school = CharField(max_length=256)
+		label = CharField(max_length=256)
 		class Meta:
 			database = db
 
@@ -86,8 +92,8 @@ def create_tables():
 	#canteen.create_table()
 	#lecture.create_table()
 	#ticket.create_table()
-	hole.create_table()
-	hole_reply.create_table()
+	#hole.create_table()
+	#hole_reply.create_table()
 
 def bbs():
 	class bbs(Model):
@@ -173,15 +179,19 @@ def canteen():
 
 def lecture():
 	class lecture(Model):
-		id  = IntegerField()
+		id = IntegerField()
 		title = CharField()
 		speaker = CharField()
-		time = CharField()
 		place = CharField()
+		date = DateField()
+		time = TimeField()
+		faculty = CharField()
+		school = CharField()
+		label = CharField()
 		class Meta:
 			database = db
 
-	titles, speakers, times, places = lecture_crawler.crawler()
+	titles, speakers, places, dates, times, faculties, schools, labels = lecture_crawler.crawler()
 
 	t = lecture.delete()
 	t.execute()
@@ -189,10 +199,14 @@ def lecture():
 	for i in range(len(titles)):
 		title = titles[i]
 		speaker = speakers[i]
-		time = times[i]
 		place = places[i]
+		date = dates[i]
+		time = times[i]
+		faculty = faculties[i]
+		school = schools[i]
+		label = labels[i]
 
-		t = lecture.insert(title=title, speaker=speaker, time=time, place=place)
+		t = lecture.insert(title=title, speaker=speaker, place=place, date=date, time=time, faculty=faculty, school=school, label=label)
 		t.execute()
 
 def ticket():
