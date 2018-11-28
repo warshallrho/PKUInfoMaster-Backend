@@ -181,15 +181,18 @@ def lecture_query():
 			database = db
 
 	lecture_array = []
-	results = lecture.select()
+	results = lecture.select().order_by(lecture.date.desc())
+	today = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 	for array in results:
-		title, speaker, place, date, time, faculty, school, label = array.title, array.speaker, array.place, array.date, array.time, array.faculty, array.school, array.label
+		title, speaker, place, date, times, faculty, school, label = array.title, array.speaker, array.place, array.date, array.time, array.faculty, array.school, array.label
+		if str(date) < today:
+			break
 		dic = {}
 		dic["title"] = title
 		dic["speaker"] = speaker
 		dic["place"] = place
 		dic["date"] = str(date)
-		dic["time"] = str(time)
+		dic["time"] = str(times)
 		dic["faculty"] = faculty
 		dic["school"] = school
 		dic["label"] = label
