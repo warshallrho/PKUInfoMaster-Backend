@@ -16,7 +16,7 @@ def index():
 	return render_template('index.html', title=title, user=user)
 
 
-def bbs_query():
+def bbs_query(lmt=0):
 	class bbs(Model):
 		id  = IntegerField()
 		title = CharField()
@@ -27,7 +27,10 @@ def bbs_query():
 			database = db
 
 	bbs_array = []
-	results = bbs.select()
+	if (lmt == 0):
+		results = bbs.select()
+	else:
+		results = bbs.select().limit(lmt)
 
 	for array in results:
 		title, board, author, link = array.title, array.board, array.author, array.link
@@ -90,7 +93,7 @@ def BBSYMD(YY, MM, DD):
 	return bbs_history_array_json
 
 
-def ticket_query():
+def ticket_query(lmt=0):
 	class ticket(Model):
 		id = IntegerField()
 		date = DateField()
@@ -103,7 +106,10 @@ def ticket_query():
 			database = db
 
 	ticket_array = []
-	results = ticket.select()
+	if (lmt == 0):
+		results = ticket.select()
+	else:
+		results = ticket.select().limit(lmt)
 	for array in results:
 		date, time, place, title, price, status = array.date, array.time, array.place, array.title, array.price, array.status
 		dic = {}
@@ -166,7 +172,7 @@ def CANTEEN():
 	return canteen_array_json
 
 
-def lecture_query():
+def lecture_query(lmt=0):
 	class lecture(Model):
 		id = IntegerField()
 		title = CharField()
@@ -181,7 +187,11 @@ def lecture_query():
 			database = db
 
 	lecture_array = []
-	results = lecture.select().order_by(lecture.date.desc())
+	if (lmt == 0):
+		results = lecture.select().order_by(lecture.date.desc())
+	else:
+		results = lecture.select().order_by(lecture.date.desc()).limit(lmt)
+
 	today = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 	for array in results:
 		title, speaker, place, date, times, faculty, school, label = array.title, array.speaker, array.place, array.date, array.time, array.faculty, array.school, array.label
@@ -203,12 +213,12 @@ def lecture_query():
 def LECTURE():
 	lecture_array = lecture_query()
 	lecture_array_json = json.dumps(lecture_array, ensure_ascii=False)
-	with open("lecture_record.json","w", encoding="utf8") as f:
-		f.write(lecture_array_json)
+	#with open("lecture_record.json","w", encoding="utf8") as f:
+	#	f.write(lecture_array_json)
 	return lecture_array_json
 
 
-def hole_query():
+def hole_query(lmt=0):
 	class hole(Model):
 		id = IntegerField()
 		pid = IntegerField()
@@ -219,7 +229,11 @@ def hole_query():
 			database = db
 
 	hole_array = []
-	results = hole.select()
+	if (lmt == 0):
+		results = hole.select()
+	else:
+		results = hole.select().limit(lmt)
+
 	for array in results:
 		pid, text, reply, likenum = array.pid, array.text, array.reply, array.likenum
 		dic = {}
@@ -269,9 +283,31 @@ def hole_reply_query(pid):
 
 @app.route('/HOLE/<int:PID>')
 def HOLE_REPLY(PID):
-	hole_reply_array = hole_reply_query(PID)
+	hole_reply_array = hole_reply_query(PID, 10)
 	hole_reply_array_json = json.dumps(hole_reply_array, ensure_ascii=False)
-	with open("hole_reply_record.json","w", encoding="utf8") as f:
-		f.write(hole_reply_array_json)
+	#with open("hole_reply_record.json","w", encoding="utf8") as f:
+	#	f.write(hole_reply_array_json)
 	return hole_reply_array_json
+
+
+def main_query():
+	main_array = {}
+	lecture_array = lecture_query(3)
+	main_array["LECTURE"] = lecture_array
+	hole_array = hole_query(3)
+	main_array["HOLE"] = hole_array
+	bbs_array = bbs_query(3)
+	main_array["BBS"] = bbs_array
+	ticket_array = ticket_query(3)
+	main_array["TICKET"] = ticket_array
+
+	return main_array
+
+@app.route('/MAIN')
+def MAINPAGE():
+	main_array = main_query()
+	main_array_json = json.dumps(main_array, ensure_ascii=False)
+	with open("main_record.json","w", encoding="utf8") as f:
+		f.write(main_array_json)
+	return main_array_json
 
