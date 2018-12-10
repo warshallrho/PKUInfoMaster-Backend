@@ -57,5 +57,3 @@ def crawler():
 				labels.append(label)
 
 	return titles, speakers, places, dates, times, faculties, schools, labels
-
-crawler()
