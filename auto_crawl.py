@@ -4,6 +4,7 @@ import crawler.lecture_crawler as lecture_crawler
 import crawler.ticket_crawler as ticket_crawler
 import crawler.hole_crawler as hole_crawler
 import crawler.hole_reply_crawler as hole_reply_crawler
+import crawler.classroom_crawler as classroom_crawler
 import json
 import time
 import threading
@@ -17,12 +18,14 @@ canteen_time = 1800
 lecture_time = 1800
 ticket_time = 1800
 hole_time = 1800
+classroom_time = 1800
 
 bbs_timer = None
 canteen_timer = None
 lecture_timer = None
 ticket_timer = None
 hole_timer = None
+classroom_timer = None
 
 def create_tables():
 	class bbs(Model):
@@ -87,13 +90,22 @@ def create_tables():
 		class Meta:
 			database = db
 
-	#bbs.create_table()
-	#bbs_history.create_table()
-	#canteen.create_table()
-	#lecture.create_table()
-	#ticket.create_table()
-	#hole.create_table()
-	#hole_reply.create_table()
+	class classroom(Model):
+		building = CharField(max_length=256)
+		room = CharField(max_length=256)
+		capacity = IntegerField()
+		info = CharField(max_length=256)
+		class Meta:
+			database = db
+			
+	bbs.create_table()
+	bbs_history.create_table()
+	canteen.create_table()
+	lecture.create_table()
+	ticket.create_table()
+	hole.create_table()
+	hole_reply.create_table()
+	classroom.create_table()
 
 def bbs():
 	class bbs(Model):
@@ -265,6 +277,29 @@ def hole():
 
 		if i < 10:
 			hole_reply(pid)
+			
+def classroom():
+	class classroom(Model):
+		id = IntegerField()
+		building = CharField(max_length=256)
+		room = CharField(max_length=256)
+		capacity = IntegerField()
+		info = CharField(max_length=256)
+		class Meta:
+			database = db
+
+	buildings, rooms, capacitys, infos = classroom_crawler.crawler()
+	t = classroom.delete()
+	t.execute()
+
+	for i in range(len(buildings)):
+		building = buildings[i]
+		room = rooms[i]
+		capacity = capacitys[i]
+		info = infos[i]
+
+		t = classroom.insert(building=building, room=room, capacity=capacity, info=info)
+		t.execute()
 
 def hole_reply_delete():
 	class hole_reply(Model):
@@ -331,19 +366,19 @@ def hole_func():
 	global hole_timer
 	hole_timer = threading.Timer(hole_time, hole_func)
 	hole_timer.start()
+	
+def classroom_func():
+	print("classroom")
+	classroom()
+	global hole_timer
+	classroom_timer = threading.Timer(classroom_time, classroom_func)
+	classroom_timer.start()
 
 create_tables()
 bbs_func()
 canteen_func()
-lecture_func()
+classroom_func()
 ticket_func()
-hole_func()
+lecture_func()
 
-'''bbs_query()
-bbs_history_query()
-canteen_query()
-lecture_query()
-ticket_query()'''
-#hole_query()
-#hole_reply_query()
 
