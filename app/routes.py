@@ -68,7 +68,6 @@ def bbs_date_query(year=2018, month=11, day=0):
 	date = time.strftime('%Y-%m-%d', time_day)
 
 	results = bbs_history.select().where(bbs_history.date == date).order_by(bbs_history.count.desc()).limit(10)
-	#print(results)
 
 	bbs_history_array = []
 	for array in results:
@@ -155,9 +154,6 @@ def canteen_query():
 			ci = canteen_array[i]
 			cj = canteen_array[j]
 			if (float(ci["now"]) / float(ci["total"]) < float(cj["now"]) / float(cj["total"])):
-				#print(ci["name"])
-				#print(cj["name"])
-				#print()
 				ck = ci.copy()
 				canteen_array[i] = cj.copy()
 				canteen_array[j] = ck
@@ -248,7 +244,6 @@ def hole_query(lmt=0):
 def HOLE():
 	hole_array = hole_query()
 	hole_array_json = json.dumps(hole_array, ensure_ascii=False)
-#	hole_array_json = json.dumps(hole_array, ensure_ascii=False)
 #	with open("hole_record.json","w", encoding="utf8") as f:
 #		f.write(hole_array_json)
 	return hole_array_json
@@ -267,18 +262,13 @@ def hole_reply_query(pid):
 	results = hole_reply.select().where(hole_reply.pid == pid).limit(10)#.order_by(hole_reply.id.asc())
 
 	for array in results:
-		#print(array)
 		pid, text, name = array.pid, array.text, array.name
 		dic = {}
 		dic["pid"] = pid
 		dic["text"] = text
 		dic["name"] = name
-		#print(dic)
 		hole_reply_array.append(dic)
 	return hole_reply_array
-	#hole_reply_array = json.dumps(hole_reply_array, ensure_ascii=False)
-	#with open("hole_reply_record.json","w", encoding="utf8") as f:
-	#	f.write(hole_reply_array)
 	
 
 @app.route('/HOLE/<int:PID>')
@@ -288,6 +278,38 @@ def HOLE_REPLY(PID):
 	#with open("hole_reply_record.json","w", encoding="utf8") as f:
 	#	f.write(hole_reply_array_json)
 	return hole_reply_array_json
+
+# 查询教室的空闲情况
+def classroom_query():
+	class classroom(Model):
+		id = IntegerField()
+		building = CharField(max_length=256)
+		room = CharField(max_length=256)
+		capacity = IntegerField()
+		info = CharField(max_length=256)
+		class Meta:
+			database = db
+
+	classroom_array = []
+	results = classroom.select()
+	for array in results:
+		building, room, capacity, info = array.building, array.room, array.capacity, array.info
+		dic = {}
+		dic["building"] = building
+		dic["room"] = room
+		dic["capacity"] = capacity
+		dic["info"] = info
+		classroom_array.append(dic)
+	return classroom_array
+
+# 查询教室的空闲情况的路由
+@app.route('/CLASSROOM')
+def CLASSROOM():
+	classroom_array = classroom_query()
+	classroom_array_json = json.dumps(classroom_array, ensure_ascii=False)
+	with open("classroom_record.json","w", encoding="utf8") as f:
+		f.write(classroom_array_json)
+	return classroom_array_json
 
 
 def main_query():

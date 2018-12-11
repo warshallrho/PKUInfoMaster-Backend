@@ -1,4 +1,3 @@
-
 __pycache__/hello.cpython-36.pyc
 crawler/__pycache__/lecture_crawler.cpython-36.pyc
 crawler/__pycache__/lecture_crawler.cpython-36.pyc
@@ -9,3 +8,5 @@ crawler/__pycache__/lecture_crawler.cpython-36.pyc
 .idea/modules.xml
 .idea/misc.xml
 .idea/deployment.xml
+crawler/hole_crawler.py
+crawler/hole_reply_crawler.py
