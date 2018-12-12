@@ -55,7 +55,7 @@ def BBS():
 
 
 # 按天查询BBS热点
-def bbs_date_query(year=2018, month=12, day=0):
+def bbs_date_query(year=2018, month=12, day=0, lmt=10):
 	class bbs_history(Model):
 		id  = IntegerField()
 		title = CharField()
@@ -70,7 +70,7 @@ def bbs_date_query(year=2018, month=12, day=0):
 	time_day = time.struct_time((year, month, day, 0, 0, 0, 0, 0, 0))
 	date = time.strftime('%Y-%m-%d', time_day)
 
-	results = bbs_history.select().where(bbs_history.date == date).order_by(bbs_history.count.desc()).limit(10)
+	results = bbs_history.select().where(bbs_history.date == date).order_by(bbs_history.count.desc()).limit(lmt)
 
 	bbs_history_array = []
 	for array in results:
@@ -86,10 +86,10 @@ def bbs_date_query(year=2018, month=12, day=0):
 # 查询BBS历史每日热点的路由
 @app.route('/BBS/<int:YY>/<int:MM>/<int:DD>')
 def BBSYMD(YY, MM, DD):
-	bbsYMD_array = bbs_date_query(YY, MM, DD)
+	bbsYMD_array = bbs_date_query(YY, MM, DD, 10)
 	bbs_history_array_json = json.dumps(bbsYMD_array, ensure_ascii=False)
-	with open("bbs_history_record.json","w", encoding="utf8") as f:
-		f.write(bbs_history_array_json)
+	#with open("bbs_history_record.json","w", encoding="utf8") as f:
+	#	f.write(bbs_history_array_json)
 	return bbs_history_array_json
 
 
@@ -123,6 +123,41 @@ def ticket_query(lmt=0):
 		ticket_array.append(dic)
 	return ticket_array
 
+# 查询百讲票务情况
+def ticket_main_date_query(year=2018, month=12, day=0, lmt=0):
+	class ticket(Model):
+		id = IntegerField()
+		date = DateField()
+		time = TimeField()
+		place = CharField()
+		title = CharField()
+		price = CharField()
+		status = CharField()
+		startdate = DateField()
+		class Meta:
+			database = db
+
+	import time
+	time_day = time.struct_time((year, month, day, 0, 0, 0, 0, 0, 0))
+	date = time.strftime('%Y-%m-%d', time_day)
+
+	ticket_array = []
+	if (lmt == 0):
+		results = ticket.select().where(ticket.startdate == date)
+	else:
+		results = ticket.select().where(ticket.startdate == date).limit(lmt)
+	for array in results:
+		date, time, place, title, price, status = array.date, array.time, array.place, array.title, array.price, array.status
+		dic = {}
+		dic["date"] = str(date)
+		dic["time"] = str(time)
+		dic["place"] = place
+		dic["title"] = title
+		dic["price"] = price
+		dic["status"] = status
+		ticket_array.append(dic)
+	return ticket_array
+
 # 查询票务情况的路由
 @app.route('/TICKET')
 def TICKET():
@@ -132,6 +167,14 @@ def TICKET():
 #		f.write(ticket_array_json)
 	return ticket_array_json
 
+# 查询TICKET每日新增演出的路由
+@app.route('/TICKET/MAIN/<int:YY>/<int:MM>/<int:DD>')
+def TICKETMAINYMD(YY, MM, DD):
+	ticketYMD_array = ticket_main_date_query(YY, MM, DD, 10)
+	ticket_history_array_json = json.dumps(ticketYMD_array, ensure_ascii=False)
+	#with open("bbs_history_record.json","w", encoding="utf8") as f:
+	#	f.write(bbs_history_array_json)
+	return ticket_history_array_json
 
 # 按天查询百讲票务
 def ticket_date_query(year=2018, month=12, day=0):
@@ -291,6 +334,34 @@ def hole_query(lmt=0):
 		hole_array.append(dic)
 	return hole_array
 
+def hole_date_query(year=2018, month=12, day=0, lmt=5):
+	class hole(Model):
+		id = IntegerField()
+		pid = IntegerField()
+		text = CharField()
+		reply = IntegerField()
+		likenum = IntegerField()
+		date = DateField()
+		key = IntegerField()
+		class Meta:
+			database = db
+
+	time_day = time.struct_time((year, month, day, 0, 0, 0, 0, 0, 0))
+	date = time.strftime('%Y-%m-%d', time_day)
+
+	hole_array = []
+	results = hole.select().where(hole.date == date).order_by(hole.key.desc()).limit(lmt)
+
+	for array in results:
+		pid, text, reply, likenum = array.pid, array.text, array.reply, array.likenum
+		dic = {}
+		dic["pid"] = pid
+		dic["text"] = text
+		dic["reply"] = reply
+		dic["likenum"] = likenum
+		hole_array.append(dic)
+	return hole_array
+
 @app.route('/HOLE')
 def HOLE():
 	hole_array = hole_query()
@@ -299,6 +370,15 @@ def HOLE():
 #		f.write(hole_array_json)
 	return hole_array_json
 
+
+# 查询树洞历史每日热点的路由
+@app.route('/HOLE/<int:YY>/<int:MM>/<int:DD>')
+def HOLEYMD(YY, MM, DD):
+	holeYMD_array = hole_date_query(YY, MM, DD, 10)
+	hole_history_array_json = json.dumps(holeYMD_array, ensure_ascii=False)
+	#with open("hole_history_record.json","w", encoding="utf8") as f:
+	#	f.write(hole_history_array_json)
+	return hole_history_array_json
 
 # 查询树洞具体情况
 def hole_reply_query(pid):
@@ -366,22 +446,22 @@ def CLASSROOM():
 	return classroom_array_json
 
 
-def main_query():
+def main_query(YY, MM, DD):
 	main_array = {}
-	lecture_array = lecture_query(3)
-	main_array["LECTURE"] = lecture_array
-	hole_array = hole_query(3)
+	#lecture_array = lecture_query_main(3)
+	#main_array["LECTURE"] = lecture_array
+	hole_array = hole_date_query(YY, MM, DD, 5)
 	main_array["HOLE"] = hole_array
-	bbs_array = bbs_query(3)
+	bbs_array = bbs_date_query(YY, MM, DD, 5)
 	main_array["BBS"] = bbs_array
-	ticket_array = ticket_query(3)
+	ticket_array = ticket_date_query(YY, MM, DD, 5)
 	main_array["TICKET"] = ticket_array
 
 	return main_array
 
-@app.route('/MAIN')
-def MAINPAGE():
-	main_array = main_query()
+@app.route('/MAIN/<int:YY>/<int:MM>/<int:DD>')
+def MAINPAGE(YY, MM, DD):
+	main_array = main_query(YY, MM, DD)
 	main_array_json = json.dumps(main_array, ensure_ascii=False)
 	#with open("main_record.json","w", encoding="utf8") as f:
 	#	f.write(main_array_json)
