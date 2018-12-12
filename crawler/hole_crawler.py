@@ -33,3 +33,6 @@ def crawler():
 			replys.append(int(t["reply"]))
 			likenums.append(int(t["likenum"]))
 	return pids, texts, replys, likenums
+
+if __name__ == "__main__":
+	crawler()

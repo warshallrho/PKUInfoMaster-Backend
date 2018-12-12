@@ -74,10 +74,10 @@ def create_tables():
 		status = CharField(max_length=256)
 		class Meta:
 			database = db
-			
+
 	class hole(Model):
 		pid = IntegerField()
-		text = CharField(max_length=256)
+		text = CharField(max_length=2048)
 		reply = IntegerField()
 		likenum = IntegerField()
 		class Meta:
@@ -85,7 +85,7 @@ def create_tables():
 
 	class hole_reply(Model):
 		pid = IntegerField()
-		text = CharField(max_length=256)
+		text = CharField(max_length=2048)
 		name = CharField(max_length=256)
 		class Meta:
 			database = db
@@ -253,7 +253,7 @@ def hole():
 	class hole(Model):
 		id = IntegerField()
 		pid = IntegerField()
-		text = CharField(max_length=256)
+		text = CharField()
 		reply = IntegerField()
 		likenum = IntegerField()
 		class Meta:
@@ -272,11 +272,9 @@ def hole():
 		reply = replys[i]
 		likenum = likenums[i]
 
-		t = hole().insert(id=i+1, pid=pid, text=text, reply=reply, likenum=likenum)
+		t = hole.insert(pid=pid, text=text, reply=reply, likenum=likenum)
 		t.execute()
-
-		if i < 10:
-			hole_reply(pid)
+		hole_reply(pid)
 			
 def classroom():
 	class classroom(Model):
@@ -305,8 +303,8 @@ def hole_reply_delete():
 	class hole_reply(Model):
 		id = IntegerField()
 		pid = IntegerField()
-		text = CharField(max_length=256)
-		name = CharField(max_length=256)
+		text = CharField()
+		name = CharField()
 		class Meta:
 			database = db
 
@@ -317,8 +315,8 @@ def hole_reply(pid):
 	class hole_reply(Model):
 		id = IntegerField()
 		pid = IntegerField()
-		text = CharField(max_length=256)
-		name = CharField(max_length=256)
+		text = CharField()
+		name = CharField()
 		class Meta:
 			database = db
 
@@ -329,9 +327,9 @@ def hole_reply(pid):
 		text = texts[i]
 		name  = names[i]
 
-		t = hole_reply().insert(pid=pid, text=text, name=name)
+		t = hole_reply.insert(pid=pid, text=text, name=name)
 		t.execute()
-
+		
 def bbs_func():
 	print("bbs")
 	bbs()
@@ -375,6 +373,7 @@ def classroom_func():
 	classroom_timer.start()
 
 create_tables()
+hole_func()
 bbs_func()
 canteen_func()
 classroom_func()

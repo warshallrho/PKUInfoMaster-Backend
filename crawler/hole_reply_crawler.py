@@ -29,3 +29,4 @@ def crawler(pid):
 		texts.append(t["text"])
 		names.append(t["name"])
 	return pids, texts, names
+	
