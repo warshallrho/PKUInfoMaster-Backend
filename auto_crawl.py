@@ -72,20 +72,24 @@ def create_tables():
 		title = CharField(max_length=256)
 		price = CharField(max_length=256)
 		status = CharField(max_length=256)
+		startdate = DateField()
 		class Meta:
 			database = db
 
 	class hole(Model):
 		pid = IntegerField()
-		text = CharField(max_length=2048)
+		text = TextField()
 		reply = IntegerField()
 		likenum = IntegerField()
+		date = DateField()
+		key = IntegerField()
 		class Meta:
 			database = db
 
 	class hole_reply(Model):
+		cid = IntegerField()
 		pid = IntegerField()
-		text = CharField(max_length=2048)
+		text = TextField()
 		name = CharField(max_length=256)
 		class Meta:
 			database = db
@@ -230,10 +234,11 @@ def ticket():
 		title = CharField()
 		price = CharField()
 		status = CharField()
+		startdate = DateField()
 		class Meta:
 			database = db
 
-	dates, times, places, titles, prices, statuses = ticket_crawler.crawler()
+	dates, times, places, titles, prices, statuses, startdates = ticket_crawler.crawler()
 
 	t = ticket.delete()
 	t.execute()
@@ -245,8 +250,9 @@ def ticket():
 		title = titles[i]
 		price = prices[i]
 		status = statuses[i]
+		startdate = startdates[i]
 
-		t = ticket.insert(date=date, time=time, place=place, title=title, price=price, status=status)
+		t = ticket.insert(date=date, time=time, place=place, title=title, price=price, status=status, startdate=startdate)
 		t.execute()
 
 def hole():
@@ -256,25 +262,30 @@ def hole():
 		text = CharField()
 		reply = IntegerField()
 		likenum = IntegerField()
+		date = DateField()
+		key = IntegerField()
 		class Meta:
 			database = db
 
-	hole_reply_delete()
-
 	pids, texts, replys, likenums = hole_crawler.crawler()
-
-	t = hole.delete()
-	t.execute()
+	date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 	for i in range(len(pids)):
 		pid = pids[i]
 		text = texts[i]
 		reply = replys[i]
 		likenum = likenums[i]
+		try:
+			t = hole.get(hole.pid == pid)
+			if t.likenum != likenum or t.reply != reply:
+				t = hole.update(likenum=likenum, reply=reply, date=date, key=reply + likenum).where(hole.pid == pid)
+				t.execute()
+				hole_reply(pid)
 
-		t = hole.insert(pid=pid, text=text, reply=reply, likenum=likenum)
-		t.execute()
-		hole_reply(pid)
+		except hole.DoesNotExist:
+			t = hole.insert(pid=pid, text=text, reply=reply, likenum=likenum, date=date, key=reply + likenum)
+			t.execute()
+			hole_reply(pid)
 			
 def classroom():
 	class classroom(Model):
@@ -314,21 +325,24 @@ def hole_reply_delete():
 def hole_reply(pid):
 	class hole_reply(Model):
 		id = IntegerField()
+		cid = IntegerField()
 		pid = IntegerField()
 		text = CharField()
 		name = CharField()
 		class Meta:
 			database = db
 
-	pids, texts, names = hole_reply_crawler.crawler(pid)
+	cids, texts, names = hole_reply_crawler.crawler(pid)
 
-	for i in range(len(pids)):
-		pid = pids[i]
+	for i in range(len(cids)):
+		cid = cids[i]
 		text = texts[i]
 		name  = names[i]
+		try:
+			t = hole_reply.get(hole_reply.cid == cid)
 
-		t = hole_reply.insert(pid=pid, text=text, name=name)
-		t.execute()
+		except hole_reply.DoesNotExist:
+			t = hole_reply.insert(cid=cid, pid=pid, text=text, name=name)
 		
 def bbs_func():
 	print("bbs")
