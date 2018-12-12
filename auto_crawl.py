@@ -310,7 +310,7 @@ def classroom():
 		t = classroom.insert(building=building, room=room, capacity=capacity, info=info)
 		t.execute()
 
-def hole_reply_delete():
+'''def hole_reply_delete():
 	class hole_reply(Model):
 		id = IntegerField()
 		pid = IntegerField()
@@ -321,6 +321,7 @@ def hole_reply_delete():
 
 	t = hole_reply.delete()
 	t.execute()
+'''
 
 def hole_reply(pid):
 	class hole_reply(Model):
@@ -334,15 +335,18 @@ def hole_reply(pid):
 
 	cids, texts, names = hole_reply_crawler.crawler(pid)
 
+	#print(pid)
+
 	for i in range(len(cids)):
 		cid = cids[i]
 		text = texts[i]
-		name  = names[i]
+		name = names[i]
 		try:
 			t = hole_reply.get(hole_reply.cid == cid)
 
 		except hole_reply.DoesNotExist:
 			t = hole_reply.insert(cid=cid, pid=pid, text=text, name=name)
+			t.execute()
 		
 def bbs_func():
 	print("bbs")

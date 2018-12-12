@@ -170,8 +170,8 @@ def ticket_date_query(year=2018, month=12, day=0):
 def TICKETYMD(YY, MM, DD):
 	ticketYMD_array = ticket_date_query(YY, MM, DD)
 	ticket_history_array_json = json.dumps(ticketYMD_array, ensure_ascii=False)
-	with open("ticket_history_record.json","w", encoding="utf8") as f:
-		f.write(ticket_history_array_json)
+	#with open("ticket_history_record.json","w", encoding="utf8") as f:
+	#	f.write(ticket_history_array_json)
 	return ticket_history_array_json
 
 
@@ -270,14 +270,16 @@ def hole_query(lmt=0):
 		text = CharField()
 		reply = IntegerField()
 		likenum = IntegerField()
+		date = DateField()
+		key = IntegerField()
 		class Meta:
 			database = db
 
 	hole_array = []
 	if (lmt == 0):
-		results = hole.select()
+		results = hole.select().order_by(hole.key.desc())
 	else:
-		results = hole.select().limit(lmt)
+		results = hole.select().order_by(hole.key.desc()).limit(lmt)
 
 	for array in results:
 		pid, text, reply, likenum = array.pid, array.text, array.reply, array.likenum
@@ -302,6 +304,7 @@ def HOLE():
 def hole_reply_query(pid):
 	class hole_reply(Model):
 		id = IntegerField()
+		cid = IntegerField()
 		pid = IntegerField()
 		text = CharField()
 		name = CharField()
@@ -309,7 +312,7 @@ def hole_reply_query(pid):
 			database = db
 
 	hole_reply_array = []
-	results = hole_reply.select().where(hole_reply.pid == pid).limit(10)#.order_by(hole_reply.id.asc())
+	results = hole_reply.select().where(hole_reply.pid == pid)
 
 	for array in results:
 		pid, text, name = array.pid, array.text, array.name
@@ -323,7 +326,7 @@ def hole_reply_query(pid):
 # 查询树洞具体内容的路由
 @app.route('/HOLE/<int:PID>')
 def HOLE_REPLY(PID):
-	hole_reply_array = hole_reply_query(PID, 10)
+	hole_reply_array = hole_reply_query(PID)
 	hole_reply_array_json = json.dumps(hole_reply_array, ensure_ascii=False)
 	#with open("hole_reply_record.json","w", encoding="utf8") as f:
 	#	f.write(hole_reply_array_json)
