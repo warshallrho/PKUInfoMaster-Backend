@@ -21,12 +21,12 @@ def crawler(pid):
 	para = {"action": "getcomment", "pid": pid, "token": "pnh3dmks5fmo00u0177qplsre44qo4fk"}
 	r = requests.get(url, headers=head, params=para)
 	data = json.loads(r.text)["data"]
-	pids = []
+	cids = []
 	texts = []
 	names = []
 	for t in data:
-		pids.append(int(t["pid"]))
+		cids.append(int(t["cid"]))
 		texts.append(t["text"])
 		names.append(t["name"])
-	return pids, texts, names
+	return cids, texts, names
 	

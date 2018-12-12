@@ -4,6 +4,7 @@ import requests
 import re
 import sys
 from bs4 import BeautifulSoup
+import time
 
 
 head = {
@@ -25,6 +26,7 @@ def crawler():
 	titles = []
 	prices = []
 	statuses = []
+	startdates = []
 
 	cnt = 0
 	for td in soup.find_all("td"):
@@ -37,10 +39,22 @@ def crawler():
 			places.append(t)
 		elif cnt == 4:
 			titles.append(t)
+			id = int(re.findall("MM_over\((.*?)\)", str(td))[0])
+			para = {"id": id}
+			r = requests.get("http://www.pku-hall.com/qbhd-nr.aspx", headers=head, params=para)
+			t = re.findall("开票时间：(.*?)月(.*?)日", r.text)[0]
+			date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+			year = int(date[0: 4])
+			startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
+			if startdate > dates[-1]:
+				year = year - 1
+				startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
+			startdates.append(startdate)
+
 		elif cnt == 5:
 			prices.append(t)
 		elif cnt == 6:
 			statuses.append(t)
 		cnt = (cnt + 1) % 7
 
-	return dates, times, places, titles, prices, statuses
+	return dates, times, places, titles, prices, statuses, startdates

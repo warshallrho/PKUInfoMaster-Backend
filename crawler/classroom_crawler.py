@@ -18,7 +18,7 @@ def crawler():
 		for room in array:
 			buildings.append(building)
 			rooms.append(room["room"])
-			capacitys.append(room["cap"])
+			capacitys.append(int(room["cap"]))
 			s = ""
 			for i in range(12):
 				if room["c" + str(i+1)] == "":
