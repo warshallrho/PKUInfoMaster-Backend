@@ -24,9 +24,10 @@ times = []
 faculties = []
 schools = []
 labels = []
+pids = []
 
 def crawler():
-	for i in range(1, 500, 2):
+	for i in range(1, 1000, 2):
 		r = requests.get(url+str(i), headers=head)
 		r.encoding = "utf-8"
 		soup = BeautifulSoup(r.text, "html.parser")
@@ -55,5 +56,6 @@ def crawler():
 				faculties.append(faculty)
 				schools.append(school)
 				labels.append(label)
+				pids.append(i)
 
-	return titles, speakers, places, dates, times, faculties, schools, labels
+	return titles, speakers, places, dates, times, faculties, schools, labels, pids
