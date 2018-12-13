@@ -4,6 +4,7 @@ from peewee import *
 import json
 from .config import db
 
+
 # 查询就餐指数
 def canteen_query():
 	class canteen(Model):

@@ -1,5 +1,4 @@
 #coding=gbk
-
 from app import app
 import json
 from pprint import pprint
@@ -7,6 +6,8 @@ from .hole import hole_date_query
 from .bbs import bbs_date_query
 from .ticket import ticket_main_date_query
 
+
+# 推送主页信息
 def main_query(YY, MM, DD):
 	main_array = {}
 	#lecture_array = lecture_query_main(3)

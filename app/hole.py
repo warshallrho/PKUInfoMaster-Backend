@@ -5,6 +5,8 @@ import json
 import time
 from .config import db
 
+
+# 查询树洞整体情况
 def hole_query(lmt=0):
 	class hole(Model):
 		id = IntegerField()
@@ -33,6 +35,7 @@ def hole_query(lmt=0):
 		hole_array.append(dic)
 	return hole_array
 
+# 查询某一天的树洞热点
 def hole_date_query(year=2018, month=12, day=0, lmt=5):
 	class hole(Model):
 		id = IntegerField()
@@ -61,6 +64,7 @@ def hole_date_query(year=2018, month=12, day=0, lmt=5):
 		hole_array.append(dic)
 	return hole_array
 
+# 查询树洞整体情况的路由
 @app.route('/HOLE')
 def HOLE():
 	hole_array = hole_query()
@@ -79,7 +83,7 @@ def HOLEYMD(YY, MM, DD):
 	#	f.write(hole_history_array_json)
 	return hole_history_array_json
 
-# 查询树洞具体情况
+# 查询树洞回复
 def hole_reply_query(pid):
 	class hole_reply(Model):
 		id = IntegerField()
@@ -102,7 +106,7 @@ def hole_reply_query(pid):
 		hole_reply_array.append(dic)
 	return hole_reply_array
 
-# 查询树洞具体内容的路由
+# 查询树洞回复的路由
 @app.route('/HOLE/<int:PID>')
 def HOLE_REPLY(PID):
 	hole_reply_array = hole_reply_query(PID)

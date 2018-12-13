@@ -7,7 +7,7 @@ from .config import db
 
 
 # ²éÑ¯½²×ùÇé¿ö
-def lecture_query(lmt=0):
+def lecture_query():
 	class lecture(Model):
 		id = IntegerField()
 		title = CharField()
@@ -22,10 +22,7 @@ def lecture_query(lmt=0):
 			database = db
 
 	lecture_array = []
-	if (lmt == 0):
-		results = lecture.select().order_by(lecture.date.desc())
-	else:
-		results = lecture.select().order_by(lecture.date.desc()).limit(lmt)
+	results = lecture.select().order_by(lecture.date.desc())
 
 	today = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 	for array in results:

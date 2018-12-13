@@ -5,6 +5,7 @@ import json
 import time
 from .config import db
 
+
 # 查询BBS实时热点
 def bbs_query(lmt=0):
 	class bbs(Model):
@@ -40,7 +41,6 @@ def BBS():
 #	with open("bbs_record.json","w", encoding="utf8") as f:
 #		f.write(bbs_array_json)
 	return bbs_array_json
-
 
 # 按天查询BBS热点
 def bbs_date_query(year=2018, month=12, day=0, lmt=10):
