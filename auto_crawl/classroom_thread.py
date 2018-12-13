@@ -1,5 +1,5 @@
-from .crawler import classroom_crawler as classroom_crawler
-from ..app.config import db
+from crawler import classroom_crawler as classroom_crawler
+from config import db
 from peewee import *
 
 

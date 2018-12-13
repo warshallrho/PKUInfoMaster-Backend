@@ -1,5 +1,5 @@
-from .crawler import canteen_crawler as canteen_crawler
-from ..app.config import db
+from crawler import canteen_crawler as canteen_crawler
+from config import db
 from peewee import *
 
 def canteen():

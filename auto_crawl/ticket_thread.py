@@ -1,5 +1,5 @@
-from .crawler import ticket_crawler as ticket_crawler
-from ..app.config import db
+from crawler import ticket_crawler as ticket_crawler
+from config import db
 from peewee import *
 
 

@@ -1,7 +1,9 @@
-from .crawler import bbs_crawler as bbs_crawler
-from ..app.config import db
+#coding=gbk
+from crawler import bbs_crawler as bbs_crawler
+from config import db
 from peewee import *
 import time
+
 
 def bbs():
 	class bbs(Model):

@@ -1,11 +1,12 @@
-﻿from .bbs_thread import bbs
-from .classroom_thread import classroom
-from .ticket_thread import ticket
-from .hole_thread import hole
-from .canteen_thread import canteen
-from .lecture_thread import lecture
+﻿from bbs_thread import bbs
+from classroom_thread import classroom
+from ticket_thread import ticket
+from hole_thread import hole
+from canteen_thread import canteen
+from lecture_thread import lecture
 
 import threading
+
 
 bbs_time = 1800
 canteen_time = 1800
@@ -63,16 +64,16 @@ def hole_func():
 
 
 def classroom_func():
-	print("classroom")
+	print("initial_classroom")
 	classroom()
 	global classroom_timer
 	classroom_timer = threading.Timer(classroom_time, classroom_func)
 	classroom_timer.start()
 
-if __name__ == "__main__":
-	hole_func()
-	bbs_func()
-	canteen_func()
-	classroom_func()
-	ticket_func()
-	lecture_func()
+#if __name__ == "__main__":
+lecture_func()
+bbs_func()
+hole_func()
+canteen_func()
+classroom_func()
+ticket_func()

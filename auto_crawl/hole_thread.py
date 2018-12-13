@@ -1,7 +1,7 @@
-from .crawler import hole_reply_crawler as hole_reply_crawler
-from .crawler import hole_crawler as hole_crawler
+from crawler import hole_reply_crawler as hole_reply_crawler
+from crawler import hole_crawler as hole_crawler
 from peewee import *
-from ..app.config import db
+from config import db
 import time
 
 

@@ -1,5 +1,5 @@
 from peewee import *
-from ..app.config import db
+from config import db
 
 
 def create_tables():
@@ -100,4 +100,6 @@ def create_table():
 	create_tables()
 
 if __name__ == "__main__":
+	print("begin create table")
 	create_table()
+	print("finish create table")

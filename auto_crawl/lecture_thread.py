@@ -1,6 +1,7 @@
-from .crawler import lecture_crawler as lecture_crawler
+from crawler import lecture_crawler as lecture_crawler
 from peewee import *
-from ..app.config import db
+from config import db
+
 
 def lecture():
 	class lecture(Model):

@@ -18,6 +18,7 @@ def lecture_query():
 		faculty = CharField()
 		school = CharField()
 		label = CharField()
+		pid = IntegerField()
 		class Meta:
 			database = db
 
