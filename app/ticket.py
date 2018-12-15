@@ -1,10 +1,12 @@
+#coding=gbk
 from app import app
 from peewee import *
 import json
 from .config import db
 
-# æŸ¥è¯¢ç™¾è®²ç¥¨åŠ¡æƒ…å†µ
-def ticket_query(lmt=0):
+
+# ²éÑ¯°Ù½²Æ±ÎñÇé¿ö
+def ticket_query():
 	class ticket(Model):
 		id = IntegerField()
 		date = DateField()
@@ -17,10 +19,7 @@ def ticket_query(lmt=0):
 			database = db
 
 	ticket_array = []
-	if (lmt == 0):
-		results = ticket.select()
-	else:
-		results = ticket.select().limit(lmt)
+	results = ticket.select()
 	for array in results:
 		date, time, place, title, price, status = array.date, array.time, array.place, array.title, array.price, array.status
 		dic = {}
@@ -33,7 +32,7 @@ def ticket_query(lmt=0):
 		ticket_array.append(dic)
 	return ticket_array
 
-# æŸ¥è¯¢ç™¾è®²ç¥¨åŠ¡æƒ…å†µ
+# ²éÑ¯°Ù½²Æ±ÎñÇé¿ö
 def ticket_main_date_query(year=2018, month=12, day=0, lmt=0):
 	class ticket(Model):
 		id = IntegerField()
@@ -68,7 +67,7 @@ def ticket_main_date_query(year=2018, month=12, day=0, lmt=0):
 		ticket_array.append(dic)
 	return ticket_array
 
-# æŸ¥è¯¢ç¥¨åŠ¡æƒ…å†µçš„è·¯ç”±
+# ²éÑ¯Æ±ÎñÇé¿öµÄÂ·ÓÉ
 @app.route('/TICKET')
 def TICKET():
 	ticket_array = ticket_query()
@@ -77,7 +76,7 @@ def TICKET():
 #		f.write(ticket_array_json)
 	return ticket_array_json
 
-# æŸ¥è¯¢TICKETæ¯æ—¥æ–°å¢æ¼”å‡ºçš„è·¯ç”±
+# ²éÑ¯TICKETÃ¿ÈÕĞÂÔöÑİ³öµÄÂ·ÓÉ
 @app.route('/TICKET/MAIN/<int:YY>/<int:MM>/<int:DD>')
 def TICKETMAINYMD(YY, MM, DD):
 	ticketYMD_array = ticket_main_date_query(YY, MM, DD, 10)
@@ -86,7 +85,7 @@ def TICKETMAINYMD(YY, MM, DD):
 	#	f.write(bbs_history_array_json)
 	return ticket_history_array_json
 
-# æŒ‰å¤©æŸ¥è¯¢ç™¾è®²ç¥¨åŠ¡
+# °´Ìì²éÑ¯°Ù½²Æ±Îñ
 def ticket_date_query(year=2018, month=12, day=0):
 	class ticket(Model):
 		id = IntegerField()
@@ -118,7 +117,7 @@ def ticket_date_query(year=2018, month=12, day=0):
 		ticket_history_array.append(dic)
 	return ticket_history_array
 
-# æŒ‰æ—¥æœŸæŸ¥è¯¢ç™¾è®²ç¥¨åŠ¡çš„è·¯ç”±
+# °´ÈÕÆÚ²éÑ¯°Ù½²Æ±ÎñµÄÂ·ÓÉ
 @app.route('/TICKET/<int:YY>/<int:MM>/<int:DD>')
 def TICKETYMD(YY, MM, DD):
 	ticketYMD_array = ticket_date_query(YY, MM, DD)

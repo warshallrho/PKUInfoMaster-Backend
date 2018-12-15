@@ -4,6 +4,7 @@ from peewee import *
 import json
 from .config import db
 
+
 # 查询教室的空闲情况
 def classroom_query():
 	class classroom(Model):
