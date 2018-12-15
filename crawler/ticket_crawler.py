@@ -14,10 +14,10 @@ head = {
 	'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
 }
 
-url = "http://www.pku-hall.com/pwxx.aspx"
+url = "http://www.pku-hall.com"
 
 def crawler():
-	r = requests.get(url, headers=head)
+	r = requests.get(url + "/pwxx.aspx", headers=head)
 	r.encoding = "utf-8"
 	soup = BeautifulSoup(r.text, "html.parser")
 	dates = []
@@ -27,6 +27,7 @@ def crawler():
 	prices = []
 	statuses = []
 	startdates = []
+	links = []
 
 	cnt = 0
 	for td in soup.find_all("td"):
@@ -39,9 +40,12 @@ def crawler():
 			places.append(t)
 		elif cnt == 4:
 			titles.append(t)
+			link = url + re.findall("<img src=\"(.*?)\"", str(td))[0]
+			links.append(link)
+			
 			id = int(re.findall("MM_over\((.*?)\)", str(td))[0])
 			para = {"id": id}
-			r = requests.get("http://www.pku-hall.com/qbhd-nr.aspx", headers=head, params=para)
+			r = requests.get(url + "/qbhd-nr.aspx", headers=head, params=para)
 			t = re.findall("开票时间：(.*?)月(.*?)日", r.text)[0]
 			date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
 			year = int(date[0: 4])
@@ -57,4 +61,4 @@ def crawler():
 			statuses.append(t)
 		cnt = (cnt + 1) % 7
 
-	return dates, times, places, titles, prices, statuses, startdates
+	return dates, times, places, titles, prices, statuses, startdates, links
