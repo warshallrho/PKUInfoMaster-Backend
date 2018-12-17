@@ -27,6 +27,8 @@ labels = []
 pids = []
 
 def crawler():
+	print("lecture start!")
+
 	for i in range(1, 1000, 2):
 		r = requests.get(url+str(i), headers=head)
 		r.encoding = "utf-8"
@@ -57,5 +59,7 @@ def crawler():
 				schools.append(school)
 				labels.append(label)
 				pids.append(i)
+
+	print("lecture end!")
 
 	return titles, speakers, places, dates, times, faculties, schools, labels, pids

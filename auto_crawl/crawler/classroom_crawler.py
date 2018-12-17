@@ -11,6 +11,8 @@ capacitys = []
 infos = []
 
 def crawler():
+	print("classroom start!")
+
 	for building in all_buildings:
 		para["buildingName"] = building
 		r = requests.get("https://portal.pku.edu.cn/portal2017/publicsearch/classroom/retrClassRoomFree.do", params=para)
@@ -26,4 +28,7 @@ def crawler():
 				else:
 					s = s + "1"
 			infos.append(s)
+
+	print("classroom end!")
+
 	return buildings, rooms, capacitys, infos

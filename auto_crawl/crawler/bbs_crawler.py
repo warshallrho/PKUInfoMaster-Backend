@@ -16,6 +16,8 @@ head = {
 url = "https://bdwm.net/v2/"
 
 def crawler():
+	print("bbs start!")
+
 	r = requests.get(url + "hot-topic.php", headers=head)
 	r.encoding = "utf-8"
 	soup = BeautifulSoup(r.text, "html.parser")
@@ -37,5 +39,7 @@ def crawler():
 		t = link.get("href")
 		if t != None and re.search(r'threadid=\d+$', t) != None:
 			links.append(url + t)
+
+	print("bbs end!")
 
 	return titles, boards, authors, links

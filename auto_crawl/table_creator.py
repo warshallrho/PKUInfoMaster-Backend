@@ -53,6 +53,7 @@ def create_tables():
 		price = CharField(max_length=256)
 		status = CharField(max_length=256)
 		startdate = DateField()
+		link = CharField(max_length=256)
 
 		class Meta:
 			database = db

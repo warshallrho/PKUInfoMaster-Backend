@@ -16,7 +16,12 @@ head = {
 url = "https://portal.pku.edu.cn/portal2017/canteen/dat/hotpoints_canteen.dat"
 
 def crawler():
+	print("canteen start!")
+
 	r = requests.get(url, headers=head)
 	r.encoding = "utf-8"
 	soup = BeautifulSoup(r.text, "html.parser")
+
+	print("canteen end!")
+
 	return re.findall(r"\d+", str(soup))

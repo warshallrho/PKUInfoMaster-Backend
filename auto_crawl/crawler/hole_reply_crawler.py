@@ -18,6 +18,8 @@ head = {
 url = "http://162.105.205.61/services/pkuhole/api.php"
 
 def crawler(pid):
+	print("hole reply start!")
+
 	para = {"action": "getcomment", "pid": pid, "token": "pnh3dmks5fmo00u0177qplsre44qo4fk"}
 	r = requests.get(url, headers=head, params=para)
 	data = json.loads(r.text)["data"]
@@ -28,5 +30,8 @@ def crawler(pid):
 		cids.append(int(t["cid"]))
 		texts.append(t["text"])
 		names.append(t["name"])
+
+	print("hole reply end!")
+
 	return cids, texts, names
 	

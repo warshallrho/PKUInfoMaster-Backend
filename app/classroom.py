@@ -28,6 +28,7 @@ def classroom_query():
 		classroom_array.append(dic)
 	return classroom_array
 
+
 # 查询教室的空闲情况的路由
 @app.route('/CLASSROOM')
 def CLASSROOM():
