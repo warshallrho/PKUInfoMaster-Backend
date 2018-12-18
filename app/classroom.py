@@ -17,15 +17,24 @@ def classroom_query():
 			database = db
 
 	classroom_array = []
-	results = classroom.select()
-	for array in results:
-		building, room, capacity, info = array.building, array.room, array.capacity, array.info
-		dic = {}
-		dic["building"] = building
-		dic["room"] = room
-		dic["capacity"] = capacity
-		dic["info"] = info
-		classroom_array.append(dic)
+	d = {}
+	buildings = ["一教", "二教", "三教", "四教", "理教", "文史", "电教", "哲学", "地学", "国关", "政管", "化学", "电子", "电教听力"]
+	for building in buildings:
+		building_array = []
+		results = classroom.select().where(classroom.building == building)
+		for array in results:
+			room, capacity, info = array.room, array.capacity, array.info
+			dic = {}
+			dic["room"] = room
+			dic["capacity"] = capacity
+			for i in range(12):
+				if info[i] == "0":
+					dic["c" + str(i+1)] = ""
+				else:
+					dic["c" + str(i+1)] = "占用"
+			building_array.append(dic)
+		d[building] = building_array
+	classroom_array.append(d)
 	return classroom_array
 
 
