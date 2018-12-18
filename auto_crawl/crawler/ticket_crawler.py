@@ -46,13 +46,18 @@ def crawler():
 			id = int(re.findall("MM_over\((.*?)\)", str(td))[0])
 			para = {"id": id}
 			r = requests.get(url + "/qbhd-nr.aspx", headers=head, params=para)
-			t = re.findall("开票时间：(.*?)月(.*?)日", r.text)[0]
-			date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-			year = int(date[0: 4])
-			startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
-			if startdate > dates[-1]:
-				year = year - 1
+			t = re.findall("开票时间：(.*?)月(.*?)日", r.text)
+			startdate = 0
+			if len(t) == 0:
+				startdate = dates[-1]
+			else:
+				t = t[0]
+				date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+				year = int(date[0: 4])
 				startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
+				if startdate > dates[-1]:
+					year = year - 1
+					startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
 			startdates.append(startdate)
 
 		elif cnt == 5:
