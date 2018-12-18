@@ -21,6 +21,8 @@ texts = []
 replys = []
 likenums = []
 def crawler():
+	print("hole start!")
+
 	for i in range(5):
 		para = {"action": "getlist", "p": str(i+1)}
 		r = requests.get(url, headers=head, params=para)
@@ -32,6 +34,9 @@ def crawler():
 			texts.append(t["text"])
 			replys.append(int(t["reply"]))
 			likenums.append(int(t["likenum"]))
+
+	print("hole end!")
+
 	return pids, texts, replys, likenums
 
 if __name__ == "__main__":

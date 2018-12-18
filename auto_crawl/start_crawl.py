@@ -71,9 +71,9 @@ def classroom_func():
 	classroom_timer.start()
 
 #if __name__ == "__main__":
-lecture_func()
-bbs_func()
-hole_func()
-canteen_func()
-classroom_func()
+#lecture_func()
+#bbs_func()
+#hole_func()
+#canteen_func()
+#classroom_func()
 ticket_func()

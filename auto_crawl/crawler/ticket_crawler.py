@@ -17,6 +17,8 @@ head = {
 url = "http://www.pku-hall.com"
 
 def crawler():
+	print("ticket start!")
+
 	r = requests.get(url + "/pwxx.aspx", headers=head)
 	r.encoding = "utf-8"
 	soup = BeautifulSoup(r.text, "html.parser")
@@ -65,5 +67,7 @@ def crawler():
 		elif cnt == 6:
 			statuses.append(t)
 		cnt = (cnt + 1) % 7
+
+	print("ticket end!")
 
 	return dates, times, places, titles, prices, statuses, startdates, links

@@ -35,11 +35,12 @@ def canteen_query():
 				canteen_array[j] = ck
 	return canteen_array
 
+
 # 查询就餐指数的路由
 @app.route('/CANTEEN')
 def CANTEEN():
 	canteen_array = canteen_query()
 	canteen_array_json = json.dumps(canteen_array, ensure_ascii=False)
-	with open("canteen_record.json","w", encoding="utf8") as f:
-		f.write(canteen_array_json)
+	#with open("canteen_record.json","w", encoding="utf8") as f:
+	#	f.write(canteen_array_json)
 	return canteen_array_json
