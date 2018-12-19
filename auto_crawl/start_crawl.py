@@ -11,7 +11,7 @@ import threading
 bbs_time = 1800
 canteen_time = 1800
 lecture_time = 1800
-ticket_time = 180
+ticket_time = 1800
 hole_time = 1800
 classroom_time = 1800
 
@@ -70,10 +70,11 @@ def classroom_func():
 	classroom_timer = threading.Timer(classroom_time, classroom_func)
 	classroom_timer.start()
 
+
 #if __name__ == "__main__":
-#lecture_func()
-#bbs_func()
-#hole_func()
-#canteen_func()
-#classroom_func()
+lecture_func()
+bbs_func()
+hole_func()
+canteen_func()
+classroom_func()
 ticket_func()

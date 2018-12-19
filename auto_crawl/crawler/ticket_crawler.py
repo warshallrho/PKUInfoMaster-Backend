@@ -16,6 +16,7 @@ head = {
 
 url = "http://www.pku-hall.com"
 
+
 def crawler():
 	print("ticket start!")
 
