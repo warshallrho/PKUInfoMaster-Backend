@@ -13,10 +13,11 @@ def ticket():
 		price = CharField()
 		status = CharField()
 		startdate = DateField()
+		link = CharField()
 		class Meta:
 			database = db
 
-	dates, times, places, titles, prices, statuses, startdates = ticket_crawler.crawler()
+	dates, times, places, titles, prices, statuses, startdates, links = ticket_crawler.crawler()
 
 	t = ticket.delete()
 	t.execute()
@@ -29,6 +30,7 @@ def ticket():
 		price = prices[i]
 		status = statuses[i]
 		startdate = startdates[i]
+		link = links[i]
 
-		t = ticket.insert(date=date, time=time, place=place, title=title, price=price, status=status, startdate=startdate)
+		t = ticket.insert(date=date, time=time, place=place, title=title, price=price, status=status, startdate=startdate, link=link)
 		t.execute()

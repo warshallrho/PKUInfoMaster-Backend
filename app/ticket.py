@@ -23,7 +23,7 @@ def ticket_query():
 	ticket_array = []
 	results = ticket.select()
 	for array in results:
-		date, time, place, title, price, status = array.date, array.time, array.place, array.title, array.price, array.status
+		date, time, place, title, price, status, link = array.date, array.time, array.place, array.title, array.price, array.status, array.link
 		dic = {}
 		dic["date"] = str(date)
 		dic["time"] = str(time)
@@ -31,6 +31,7 @@ def ticket_query():
 		dic["title"] = title
 		dic["price"] = price
 		dic["status"] = status
+		dic["link"] = link
 		ticket_array.append(dic)
 	return ticket_array
 
@@ -46,6 +47,7 @@ def ticket_main_date_query(year=2018, month=12, day=0, lmt=0):
 		price = CharField()
 		status = CharField()
 		startdate = DateField()
+		link = CharField()
 		class Meta:
 			database = db
 
@@ -81,6 +83,7 @@ def ticket_date_query(year=2018, month=12, day=0):
 		title = CharField()
 		price = CharField()
 		status = CharField()
+		link = CharField()
 		class Meta:
 			database = db
 
@@ -109,8 +112,8 @@ def ticket_date_query(year=2018, month=12, day=0):
 def TICKET():
 	ticket_array = ticket_query()
 	ticket_array_json = json.dumps(ticket_array, ensure_ascii=False)
-#	with open("ticket_record.json","w", encoding="utf8") as f:
-#		f.write(ticket_array_json)
+	#with open("ticket_record.json","w", encoding="utf8") as f:
+	#	f.write(ticket_array_json)
 	return ticket_array_json
 
 

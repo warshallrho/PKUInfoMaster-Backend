@@ -11,7 +11,7 @@ import threading
 bbs_time = 1800
 canteen_time = 1800
 lecture_time = 1800
-ticket_time = 1800
+ticket_time = 180
 hole_time = 1800
 classroom_time = 1800
 
