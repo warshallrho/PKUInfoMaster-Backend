@@ -14,7 +14,7 @@ def crawler():
 	for building in classrooms:
 		para["buildingName"] = building
 		r = requests.get("https://portal.pku.edu.cn/portal2017/publicsearch/classroom/retrClassRoomFree.do", params=para)
-		array = json.loads(r.text)["rows"]
+		array = json.loads(r.text, strict=False)["rows"]
 		for room in array:
 			buildings.append(building)
 			rooms.append(room["room"])
