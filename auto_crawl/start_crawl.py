@@ -72,9 +72,9 @@ def classroom_func():
 
 
 #if __name__ == "__main__":
+classroom_func()
 lecture_func()
 bbs_func()
 hole_func()
 canteen_func()
-classroom_func()
 ticket_func()
