@@ -30,4 +30,3 @@ def crawler():
 					s = s + "1"
 			infos.append(s)
 	return buildings, rooms, capacitys, infos
-crawler()
