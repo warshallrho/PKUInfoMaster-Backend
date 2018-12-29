@@ -15,6 +15,7 @@ rooms = []
 capacitys = []
 infos = []
 
+# 登录
 def login():
 	url = "https://iaaa.pku.edu.cn/iaaa/oauthlogin.do"
 	redirect = "https://w.pku.edu.cn/users/auth/pkuauth/callback"
@@ -27,26 +28,31 @@ def login():
 	r = session.get(redirect, params=para)
 	return session
 
+#教室爬虫，爬取各个教学楼、各个教室的房间号、容量、每节课是否有人
 def crawler():
 	print("classroom start!")
-	session = login()
 
-	for building in all_buildings:
-		para["buildingName"] = building
-		r = session.get("https://portal.w.pku.edu.cn/portal2017/publicsearch/classroom/retrClassRoomFree.do", params=para)
-		array = json.loads(r.text, strict=False)["rows"]
-		for room in array:
-			buildings.append(building)
-			rooms.append(room["room"])
-			capacitys.append(int(room["cap"]))
-			s = ""
-			for i in range(12):
-				if room["c" + str(i+1)] == "":
-					s = s + "0"
-				else:
-					s = s + "1"
-			infos.append(s)
+	try:
+		session = login()
+		for building in all_buildings:
+			para["buildingName"] = building
+			r = session.get("https://portal.w.pku.edu.cn/portal2017/publicsearch/classroom/retrClassRoomFree.do", params=para)
+			array = json.loads(r.text, strict=False)["rows"]
+			for room in array:
+				buildings.append(building)
+				rooms.append(room["room"])
+				capacitys.append(int(room["cap"]))
+				s = ""
+				for i in range(12):
+					if room["c" + str(i+1)] == "":
+						s = s + "0"
+					else:
+						s = s + "1"
+				infos.append(s)
 
-	print("classroom end!")
-	
-	return buildings, rooms, capacitys, infos
+		print("classroom end!")
+		
+		return buildings, rooms, capacitys, infos
+	except:
+		print("CLASSROOM ERROR!!!!!!")
+		return buildings, rooms, capacitys, infos

@@ -26,40 +26,45 @@ schools = []
 labels = []
 pids = []
 
+#讲座爬虫，爬取题目、演讲者、地点、日期、时间、学部、学院、标签、标号
 def crawler():
 	print("lecture start!")
 
-	for i in range(1, 1000, 2):
-		r = requests.get(url+str(i), headers=head)
-		r.encoding = "utf-8"
-		soup = BeautifulSoup(r.text, "html.parser")
-		for sec in soup.find_all("section"):
-			if(sec.get("class") == ["pull-left", "lec-content", "bg-white"]):
-				title = sec.find("h3").get_text()
-				if(title == " "):
-					break
-				title.strip()
-				div = sec.find_all("div", attrs={"class": "brief"})
-				speaker = div[0].get_text()
-				place = div[1].get_text()
-				t = div[2].get_text().split(" ")
-				date = t[0]
-				time = t[1]
-				t = div[7].get_text().split(" / ")
-				faculty = t[0]
-				school = t[1]
-				label = div[8].get_text().strip("\n")
+	try:
+		for i in range(1, 1000, 2):
+			r = requests.get(url+str(i), headers=head)
+			r.encoding = "utf-8"
+			soup = BeautifulSoup(r.text, "html.parser")
+			for sec in soup.find_all("section"):
+				if(sec.get("class") == ["pull-left", "lec-content", "bg-white"]):
+					title = sec.find("h3").get_text()
+					if(title == " "):
+						break
+					title.strip()
+					div = sec.find_all("div", attrs={"class": "brief"})
+					speaker = div[0].get_text()
+					place = div[1].get_text()
+					t = div[2].get_text().split(" ")
+					date = t[0]
+					time = t[1]
+					t = div[7].get_text().split(" / ")
+					faculty = t[0]
+					school = t[1]
+					label = div[8].get_text().strip("\n")
 
-				titles.append(title)
-				speakers.append(speaker)
-				places.append(place)
-				dates.append(date)
-				times.append(time)
-				faculties.append(faculty)
-				schools.append(school)
-				labels.append(label)
-				pids.append(i)
+					titles.append(title)
+					speakers.append(speaker)
+					places.append(place)
+					dates.append(date)
+					times.append(time)
+					faculties.append(faculty)
+					schools.append(school)
+					labels.append(label)
+					pids.append(i)
 
-	print("lecture end!")
+		print("lecture end!")
 
-	return titles, speakers, places, dates, times, faculties, schools, labels, pids
+		return titles, speakers, places, dates, times, faculties, schools, labels, pids
+	except:
+		print("LECTURE ERROR!!!!!!")
+		return titles, speakers, places, dates, times, faculties, schools, labels, pids

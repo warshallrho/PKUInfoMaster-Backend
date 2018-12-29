@@ -20,24 +20,27 @@ pids = []
 texts = []
 replys = []
 likenums = []
+
+#树洞爬虫，爬取树洞号、内容、回复数、喜欢数
 def crawler():
 	print("hole start!")
 
-	for i in range(5):
-		para = {"action": "getlist", "p": str(i+1)}
-		r = requests.get(url, headers=head, params=para)
-		data = json.loads(r.text)["data"]
-		for t in data:
-			if int(t["pid"]) in pids:
-				continue
-			pids.append(int(t["pid"]))
-			texts.append(t["text"])
-			replys.append(int(t["reply"]))
-			likenums.append(int(t["likenum"]))
+	try:
+		for i in range(5):
+			para = {"action": "getlist", "p": str(i+1)}
+			r = requests.get(url, headers=head, params=para)
+			data = json.loads(r.text)["data"]
+			for t in data:
+				if int(t["pid"]) in pids:
+					continue
+				pids.append(int(t["pid"]))
+				texts.append(t["text"])
+				replys.append(int(t["reply"]))
+				likenums.append(int(t["likenum"]))
 
-	print("hole end!")
+		print("hole end!")
 
-	return pids, texts, replys, likenums
-
-if __name__ == "__main__":
-	crawler()
+		return pids, texts, replys, likenums
+	except:
+		print("HOLE ERROR!!!!!!")
+		return pids, texts, replys, likenums

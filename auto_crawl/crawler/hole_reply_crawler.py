@@ -17,21 +17,25 @@ head = {
 }
 url = "http://162.105.205.61/services/pkuhole/api.php"
 
+#树洞回复爬虫，爬取树洞回复号、内容、姓名
 def crawler(pid):
 	print("hole reply start!")
-
-	para = {"action": "getcomment", "pid": pid, "token": "pnh3dmks5fmo00u0177qplsre44qo4fk"}
-	r = requests.get(url, headers=head, params=para)
-	data = json.loads(r.text)["data"]
 	cids = []
 	texts = []
 	names = []
-	for t in data:
-		cids.append(int(t["cid"]))
-		texts.append(t["text"])
-		names.append(t["name"])
 
-	print("hole reply end!")
+	try:
+		para = {"action": "getcomment", "pid": pid, "token": "pnh3dmks5fmo00u0177qplsre44qo4fk"}
+		r = requests.get(url, headers=head, params=para)
+		data = json.loads(r.text)["data"]
+		for t in data:
+			cids.append(int(t["cid"]))
+			texts.append(t["text"])
+			names.append(t["name"])
 
-	return cids, texts, names
-	
+		print("hole reply end!")
+
+		return cids, texts, names
+	except:
+		print("HOLE REPLY ERROR!!!!!!")
+		return cids, texts, names

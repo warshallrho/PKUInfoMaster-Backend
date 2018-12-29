@@ -16,13 +16,9 @@ head = {
 
 url = "http://www.pku-hall.com"
 
-
+#票务爬虫，爬取日期、时间、地点、标题、票价、状态、开票日期、链接
 def crawler():
 	print("ticket start!")
-
-	r = requests.get(url + "/pwxx.aspx", headers=head)
-	r.encoding = "utf-8"
-	soup = BeautifulSoup(r.text, "html.parser")
 	dates = []
 	times = []
 	places = []
@@ -32,43 +28,51 @@ def crawler():
 	startdates = []
 	links = []
 
-	cnt = 0
-	for td in soup.find_all("td"):
-		t = td.get_text().strip()
-		if cnt == 0:
-			dates.append(t)
-		elif cnt == 2:
-			times.append(t)
-		elif cnt == 3:
-			places.append(t)
-		elif cnt == 4:
-			titles.append(t)
-			link = url + re.findall("<img src=\"(.*?)\"", str(td))[0]
-			links.append(link)
-			
-			id = int(re.findall("MM_over\((.*?)\)", str(td))[0])
-			para = {"id": id}
-			r = requests.get(url + "/qbhd-nr.aspx", headers=head, params=para)
-			t = re.findall("开票时间：(.*?)月(.*?)日", r.text)
-			startdate = 0
-			if len(t) == 0:
-				startdate = dates[-1]
-			else:
-				t = t[0]
-				date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-				year = int(date[0: 4])
-				startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
-				if startdate > dates[-1]:
-					year = year - 1
+	try:
+		r = requests.get(url + "/pwxx.aspx", headers=head)
+		r.encoding = "utf-8"
+		soup = BeautifulSoup(r.text, "html.parser")
+
+		cnt = 0
+		for td in soup.find_all("td"):
+			t = td.get_text().strip()
+			if cnt == 0:
+				dates.append(t)
+			elif cnt == 2:
+				times.append(t)
+			elif cnt == 3:
+				places.append(t)
+			elif cnt == 4:
+				titles.append(t)
+				link = url + re.findall("<img src=\"(.*?)\"", str(td))[0]
+				links.append(link)
+				
+				id = int(re.findall("MM_over\((.*?)\)", str(td))[0])
+				para = {"id": id}
+				r = requests.get(url + "/qbhd-nr.aspx", headers=head, params=para)
+				t = re.findall("开票时间：(.*?)月(.*?)日", r.text)
+				startdate = 0
+				if len(t) == 0:
+					startdate = dates[-1]
+				else:
+					t = t[0]
+					date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+					year = int(date[0: 4])
 					startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
-			startdates.append(startdate)
+					if startdate > dates[-1]:
+						year = year - 1
+						startdate = "{0}-{1}-{2}".format(year, t[0].zfill(2), t[1].zfill(2))
+				startdates.append(startdate)
 
-		elif cnt == 5:
-			prices.append(t)
-		elif cnt == 6:
-			statuses.append(t)
-		cnt = (cnt + 1) % 7
+			elif cnt == 5:
+				prices.append(t)
+			elif cnt == 6:
+				statuses.append(t)
+			cnt = (cnt + 1) % 7
 
-	print("ticket end!")
+		print("ticket end!")
 
-	return dates, times, places, titles, prices, statuses, startdates, links
+		return dates, times, places, titles, prices, statuses, startdates, links
+	except:
+		print("TICKET ERROR!!!!!!")
+		return dates, times, places, titles, prices, statuses, startdates, links

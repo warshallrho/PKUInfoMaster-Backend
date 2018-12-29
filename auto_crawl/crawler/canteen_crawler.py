@@ -17,6 +17,7 @@ head = {
 
 url = "https://portal.w.pku.edu.cn/portal2017/canteen/dat/hotpoints_canteen.dat"
 
+# 登录
 def login():
 	url = "https://iaaa.pku.edu.cn/iaaa/oauthlogin.do"
 	redirect = "https://w.pku.edu.cn/users/auth/pkuauth/callback"
@@ -29,14 +30,19 @@ def login():
 	r = session.get(redirect, params=para)
 	return session
 
+# 食堂的爬虫，爬取各个食堂的人数
 def crawler():
 	print("canteen start!")
 
-	session = login()
-	r = session.get(url, headers=head)
-	r.encoding = "utf-8"
-	soup = BeautifulSoup(r.text, "html.parser")
+	try:
+		session = login()
+		r = session.get(url, headers=head)
+		r.encoding = "utf-8"
+		soup = BeautifulSoup(r.text, "html.parser")
 
-	print("canteen end!")
+		print("canteen end!")
 
-	return re.findall(r"\d+", str(soup))
+		return re.findall(r"\d+", str(soup))
+	except:
+		print("CANTEEN ERROR!!!!!!")
+		return []
