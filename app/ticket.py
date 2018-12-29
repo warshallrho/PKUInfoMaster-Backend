@@ -2,6 +2,8 @@
 from app import app
 from peewee import *
 import json
+import requests
+import re
 from .config import db
 
 
@@ -106,6 +108,14 @@ def ticket_date_query(year=2018, month=12, day=0):
 		ticket_history_array.append(dic)
 	return ticket_history_array
 
+def ticket_pic_query():
+	url = "http://www.pku-hall.com"
+	r = requests.get(url + "/index.aspx")
+	r.encoding = "utf-8"
+	array = re.findall("style=\"background:url\((.*?)\)", r.text)
+	for i in range(len(array)):
+		array[i] = url + array[i]
+	return array
 
 # 查询票务情况的路由
 @app.route('/TICKET')
@@ -135,3 +145,13 @@ def TICKETMAINYMD(YY, MM, DD):
 	#with open("bbs_history_record.json","w", encoding="utf8") as f:
 	#	f.write(bbs_history_array_json)
 	return ticket_history_array_json
+
+
+# 查询TICKET轮播图的路由
+@app.route('/TICKET/PICTURE')
+def TICKETPICTURE():
+	ticket_pic_array = ticket_pic_query()
+	ticket_pic_array_json = json.dumps(ticket_pic_array, ensure_ascii=False)
+	#with open("ticket_pic_array.json","w", encoding="utf8") as f:
+	#	f.write(ticket_pic_array_json)
+	return ticket_pic_array_json
