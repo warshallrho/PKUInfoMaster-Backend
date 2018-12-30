@@ -122,7 +122,7 @@ def hole_reply_query(pid):
 # 查询树洞整体情况的路由
 @app.route('/HOLE')
 def HOLE():
-	hole_array = hole_query()
+	hole_array = hole_query(lmt=100)
 	hole_array_json = json.dumps(hole_array, ensure_ascii=False)
 #	with open("hole_record.json","w", encoding="utf8") as f:
 #		f.write(hole_array_json)
