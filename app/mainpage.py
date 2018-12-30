@@ -26,7 +26,7 @@ def main_query(YY, MM, DD):
 	#with open("main_all.json","w", encoding="utf8") as f:
 	#	f.write(main_all_json)
 
-	pprint(main_array)
+	# pprint(main_array)
 
 	return main_array
 
